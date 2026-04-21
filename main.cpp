@@ -28,6 +28,13 @@ struct PriorityQueueHeap{
         }
     }
 
+    void restoreOrderPush(int index){
+        while(index > 0 && heap[index] > heap[parent(index)]){
+            std::swap(heap[index], heap[parent(index)]);
+            index = parent(index);
+        }
+    }
+
     void pop(){
         if(heap.empty()){
             throw std::out_of_range("Queue is empty");
@@ -38,7 +45,9 @@ struct PriorityQueueHeap{
     }
 
     void push(int priority){
-        //TODO
+        heap.push_back(priority);
+        restoreOrderPush(heap.size()-1);
+
     }
 
     int peek(){
