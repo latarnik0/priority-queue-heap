@@ -3,27 +3,50 @@
 #include <algorithm>
 
 struct PriorityQueueHeap{
-    std::vector<int> arr;
+    std::vector<int> heap;
 
     int parent(int i){ return (i-1)/2; }
     int leftChild(int i){ return 2*i + 1; }
     int rightChild(int i){ return 2*i + 2; }
-    int getSize(){ return arr.size(); }
+    int getSize(){ return heap.size(); }
+
+    void restoreOrderPop(int index){
+        int maxIndex = index;
+        int l = leftChild(index);
+        int r = rightChild(index);
+        
+        if(l < heap.size() && heap[l] > heap[maxIndex]){
+            maxIndex = l;
+        }
+        if(r < heap.size() && heap[r] > heap[maxIndex]){
+            maxIndex = r;
+        }
+
+        if(index != maxIndex){
+            std::swap(heap[index], heap[maxIndex]);
+            restoreOrderPop(maxIndex);
+        }
+    }
+
+    void pop(){
+        if(heap.empty()){
+            throw std::out_of_range("Queue is empty");
+        }
+        heap[0] = heap.back();
+        heap.pop_back();
+        restoreOrderPop(0);
+    }
 
     void push(int priority){
-        
-    }
-    void pop(){
-
+        //TODO
     }
 
     int peek(){
-        if(arr.empty()){
+        if(heap.empty()){
             throw std::out_of_range("Queue is empty");
         }
-        return arr.front();
+        return heap.front();
     }
-
 };
 
 int main(){
