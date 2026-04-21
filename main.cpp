@@ -2,8 +2,12 @@
 #include <iostream>
 #include <algorithm>
 
+struct Element{
+    int id;
+    int priority;
+};
 struct PriorityQueueHeap{
-    std::vector<int> heap;
+    std::vector<Element> heap;
 
     int parent(int i){ return (i-1)/2; }
     int leftChild(int i){ return 2*i + 1; }
@@ -15,10 +19,10 @@ struct PriorityQueueHeap{
         int l = leftChild(index);
         int r = rightChild(index);
         
-        if(l < heap.size() && heap[l] > heap[maxIndex]){
+        if(l < heap.size() && heap[l].priority > heap[maxIndex].priority){
             maxIndex = l;
         }
-        if(r < heap.size() && heap[r] > heap[maxIndex]){
+        if(r < heap.size() && heap[r].priority > heap[maxIndex].priority){
             maxIndex = r;
         }
 
@@ -29,7 +33,7 @@ struct PriorityQueueHeap{
     }
 
     void restoreOrderPush(int index){
-        while(index > 0 && heap[index] > heap[parent(index)]){
+        while(index > 0 && heap[index].priority > heap[parent(index)].priority){
             std::swap(heap[index], heap[parent(index)]);
             index = parent(index);
         }
@@ -44,17 +48,20 @@ struct PriorityQueueHeap{
         restoreOrderPop(0);
     }
 
-    void push(int priority){
-        heap.push_back(priority);
+    void push(Element newElement){
+        heap.push_back(newElement);
         restoreOrderPush(heap.size()-1);
-
     }
 
-    int peek(){
+    Element peek(){
         if(heap.empty()){
             throw std::out_of_range("Queue is empty");
         }
         return heap.front();
+    }
+
+    void changePriority(){
+
     }
 };
 
