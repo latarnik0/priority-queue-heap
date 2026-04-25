@@ -2,6 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include <unordered_map>
+#include <cstdlib>
+#include <chrono>
 
 struct Element{
     int id;
@@ -9,6 +11,8 @@ struct Element{
 };
 struct PriorityQueueHeap{
     std::vector<Element> heap;
+
+    // mapa jest używana do znajdywania danego elementu - niezbędne do funkcji changePriority()
     std::unordered_map<int, int> pos;
 
     int parent(int i){ return (i-1)/2; }
@@ -110,16 +114,51 @@ struct PriorityQueueHeap{
         }
         else return;
     }
-
-    void prnt(){
-        for(int i=0; i<heap.size(); ++i){
-            std::cout<<"ID: "<<heap[i].id<<std::endl;
-            std::cout<<"Priority: "<<heap[i].priority<<std::endl;
-            std::cout<<"---------------"<<std::endl;
-        }
-    }
 };
 
-int main(){
+void test(){
+    std::vector<int> v = {1000, 10000, 100000, 1000000, 10000000};
+    int samples = 1000;
+    long long OP_TIME = 0;
 
+    for(int N : v){
+        PriorityQueueHeap pq;
+        
+        // KOPIEC JEST UZUPEŁNIANY PRZED WŁAŚCIWYM POMIAREM
+        for(int i=0; i<N; ++i){
+            pq.push(i, i);
+        } 
+
+        // TESTOWANIE changePriority() WYMAGA SPROWADZENIA DO PRZYPADKU ŚREDNIEGO BO ZALEŻY OD restoreOrderPop() LUB restoreOrderPush()
+
+        /*
+        std::vector<int> targetIDs(samples); 
+        std::vector<int> newPrios(samples);
+
+        for (int j = 0; j < samples; ++j) {
+            targetIDs[j] = rand() % N; 
+            newPrios[j] = rand() % (2 * N); 
+        }  
+        */
+
+
+        // WŁAŚCIWY POMIAR
+        auto start = std::chrono::high_resolution_clock::now();
+        for(int j=0; j<samples; ++j){
+
+            // testowana funkcja 
+            pq.pop();
+
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+
+        // UŚREDNIONY CZAS DANEJ OPERACJI
+        OP_TIME = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / samples;
+
+        std::cout<<"N="<<N<<" ; "<<"OPTIME="<<OP_TIME<<std::endl;
+    }
+}
+
+int main(){
+    test();
 }
